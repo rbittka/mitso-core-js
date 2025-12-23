@@ -1,60 +1,136 @@
-/**
- * You will complete the PaginationHelper class,
- * which is a utility class helpful for querying paging information related to an array.
- * The class is designed to take in an array of values and an integer
- * indicating how many items will be allowed per each page.
- * The types of values contained within the collection/array are not relevant.
- *
- * The following are some examples of how this class is used:
- * @example
- *     const helper = new PaginationHelper(['a','b','c','d','e','f'], 4);
- *     helper.pageCount(); //should == 2
- *     helper.itemCount(); //should == 6
- *     helper.pageItemCount(0); //should == 4
- *     helper.pageItemCount(1); // last page - should == 2
- *     helper.pageItemCount(2); // should == -1 since the page is invalid
- *
- *     // pageIndex takes an item index and returns the page that it belongs on
- *     helper.pageIndex(5); //should == 1 (zero based index)
- *     helper.pageIndex(2); //should == 0
- *     helper.pageIndex(20); //should == -1
- *     helper.pageIndex(-10); //should == -1
- */
-
-class PaginationHelper {
-  // The constructor takes in an array of items and a integer indicating how many
-  // items fit within a single page
-  constructor(/* collection, itemsPerPage */) {
-    throw new Error('Not implemented');
+class Rectangle {
+  constructor(width, height) {
+    this.width = width;
+    this.height = height;
   }
-
-  // returns the number of items within the entire collection
-  itemCount() {
-    console.log(this);
-    throw new Error('Not implemented');
+  
+  getArea() {
+    return this.width * this.height;
   }
-
-  // returns the number of pages
-  pageCount() {
-    console.log(this);
-    throw new Error('Not implemented');
+  
+  getPerimeter() {
+    return 2 * (this.width + this.height);
   }
-
-  // returns the number of items on the current page. page_index is zero based.
-  // this method should return -1 for pageIndex values that are out of range
-  pageItemCount() {
-    console.log(this);
-    throw new Error('Not implemented');
-  }
-
-  // determines what page an item is on. Zero based indexes
-  // this method should return -1 for itemIndex values that are out of range
-  pageIndex() {
-    console.log(this);
-    throw new Error('Not implemented');
+  
+  toString() {
+    return `Rectangle[width=${this.width},height=${this.height}]`;
   }
 }
 
-module.exports = {
-  PaginationHelper,
-};
+class Circle {
+  constructor(radius) {
+    this.radius = radius;
+  }
+  
+  getArea() {
+    return Math.PI * this.radius * this.radius;
+  }
+  
+  getCircumference() {
+    return 2 * Math.PI * this.radius;
+  }
+  
+  toString() {
+    return `Circle[radius=${this.radius}]`;
+  }
+}
+
+class Staff {
+  constructor(name, age, position) {
+    this.name = name;
+    this.age = age;
+    this.position = position;
+  }
+  
+  introduce() {
+    return `Hello, my name is ${this.name}, I'm ${this.age} years old, and I work as a ${this.position}.`;
+  }
+}
+
+class Manager extends Staff {
+  constructor(name, age) {
+    super(name, age, 'manager');
+  }
+  
+  introduce() {
+    return super.introduce() + ' How can I help you?';
+  }
+}
+
+class Waiter extends Staff {
+  constructor(name, age) {
+    super(name, age, 'waiter');
+  }
+  
+  introduce() {
+    return super.introduce() + ' What would you like to order?';
+  }
+}
+
+class Cook extends Staff {
+  constructor(name, age) {
+    super(name, age, 'cook');
+  }
+  
+  introduce() {
+    return super.introduce() + ' I will prepare your meal.';
+  }
+}
+
+class Developer {
+  constructor(name, age, skills) {
+    this.name = name;
+    this.age = age;
+    this.skills = skills;
+  }
+  
+  introduce() {
+    return `Hello, my name is ${this.name}, I'm ${this.age} years old, and I'm a developer.`;
+  }
+  
+  isSkilledIn(skill) {
+    return this.skills.includes(skill);
+  }
+}
+
+class FrontendDeveloper extends Developer {
+  constructor(name, age, skills) {
+    super(name, age, skills);
+  }
+  
+  introduce() {
+    return super.introduce() + ' I specialize in frontend development.';
+  }
+  
+  buildWebsite(backendApi) {
+    return `Building a website using ${backendApi}`;
+  }
+}
+
+class BackendDeveloper extends Developer {
+  constructor(name, age, skills) {
+    super(name, age, skills);
+  }
+  
+  introduce() {
+    return super.introduce() + ' I specialize in backend development.';
+  }
+  
+  buildApi(database) {
+    return `Building an API using ${database}`;
+  }
+}
+
+class FullStackDeveloper extends FrontendDeveloper {
+  constructor(name, age, skills) {
+    super(name, age, skills);
+  }
+  
+  introduce() {
+    return `Hello, my name is ${this.name}, I'm ${this.age} years old, and I'm a full-stack developer.`;
+  }
+  
+  deployProject(frontend, backend, database) {
+    return `Deploying project with ${frontend}, ${backend}, and ${database}`;
+  }
+}
