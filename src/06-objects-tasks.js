@@ -1,144 +1,107 @@
-/* ************************************************************************************************
- *                                                                                                *
- * Please read the following tutorial before implementing tasks:                                   *
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer *
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object        *
- *                                                                                                *
- ************************************************************************************************ */
-
-/**
- * Returns the rectangle object with width and height parameters and getArea() method
- *
- * @param {number} width
- * @param {number} height
- * @return {Object}
- *
- * @example
- *    const r = new Rectangle(10,20);
- *    console.log(r.width);       // => 10
- *    console.log(r.height);      // => 20
- *    console.log(r.getArea());   // => 200
- */
-function Rectangle(/* width, height */) {
-  throw new Error('Not implemented');
+function shallowCopy(src) {
+  return Object.assign({}, src);
 }
 
-/**
- * Returns the JSON representation of specified object
- *
- * @param {object} obj
- * @return {string}
- *
- * @example
- *    [1,2,3]   =>  '[1,2,3]'
- *    { width: 10, height : 20 } => '{"height":10,"width":20}'
- */
-function getJSON(/* obj */) {
-  throw new Error('Not implemented');
+function mergeObjects(target, source) {
+  return Object.assign({}, target, source);
 }
 
-/**
- * Returns the object of specified type from JSON representation
- *
- * @param {Object} proto
- * @param {string} json
- * @return {object}
- *
- * @example
- *    const r = fromJSON(Circle.prototype, '{"radius":10}');
- *
- */
-function fromJSON(/* proto, json */) {
-  throw new Error('Not implemented');
+function removeProperties(object, keys) {
+  const result = { ...object };
+  keys.forEach(key => {
+    delete result[key];
+  });
+  return result;
 }
 
-/**
- * Css selectors builder
- *
- * Each complex selector can consists of type, id, class, attribute, pseudo-class
- * and pseudo-element selectors:
- *
- *    element#id.class[attr]:pseudoClass::pseudoElement
- *              \----/\----/\----------/
- *              Can be several occurrences
- *
- * All types of selectors can be combined using the combination ' ','+','~','>' .
- *
- * The task is to design a single class, independent classes or classes hierarchy
- * and implement the functionality to build the css selectors using the provided cssSelectorBuilder.
- * Each selector should have the stringify() method to output the string representation
- * according to css specification.
- *
- * Provided cssSelectorBuilder should be used as facade only to create your own classes,
- * for example the first method of cssSelectorBuilder can be like this:
- *   element: function(value) {
- *       return new MySuperBaseElementSelector(...)...
- *   },
- *
- * The design of class(es) is totally up to you, but try to make it as simple,
- * clear and readable as possible.
- *
- * @example
- *
- *  const builder = cssSelectorBuilder;
- *
- *  builder.id('main').class('container').class('editable').stringify()
- *    => '#main.container.editable'
- *
- *  builder.element('a').attr('href$=".png"').pseudoClass('focus').stringify()
- *    => 'a[href$=".png"]:focus'
- *
- *  builder.combine(
- *      builder.element('div').id('main').class('container').class('draggable'),
- *      '+',
- *      builder.combine(
- *          builder.element('table').id('data'),
- *          '~',
- *           builder.combine(
- *               builder.element('tr').pseudoClass('nth-of-type(even)'),
- *               ' ',
- *               builder.element('td').pseudoClass('nth-of-type(even)')
- *           )
- *      )
- *  ).stringify()
- *    => 'div#main.container.draggable + table#data ~ tr:nth-of-type(even)   td:nth-of-type(even)'
- *
- *  For more examples see unit tests.
- */
+function compareObjects(obj1, obj2) {
+  return JSON.stringify(obj1) === JSON.stringify(obj2);
+}
 
-const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
-  },
+function isEmptyObject(obj) {
+  return Object.keys(obj).length === 0;
+}
 
-  id(/* value */) {
-    throw new Error('Not implemented');
-  },
+function makeImmutable(obj) {
+  return Object.freeze(obj);
+}
 
-  class(/* value */) {
-    throw new Error('Not implemented');
-  },
+function makeWord(words) {
+  return words.map(word => word[0]).join('');
+}
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
-  },
+function sellTickets(queue) {
+  const bills = { 25: 0, 50: 0, 100: 0 };
+  
+  for (const bill of queue) {
+    if (bill === 25) {
+      bills[25]++;
+    } else if (bill === 50) {
+      if (bills[25] > 0) {
+        bills[25]--;
+        bills[50]++;
+      } else {
+        return false;
+      }
+    } else if (bill === 100) {
+      if (bills[50] > 0 && bills[25] > 0) {
+        bills[50]--;
+        bills[25]--;
+        bills[100]++;
+      } else if (bills[25] >= 3) {
+        bills[25] -= 3;
+        bills[100]++;
+      } else {
+        return false;
+      }
+    }
+  }
+  
+  return true;
+}
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
-  },
+function getRectangle(width, height) {
+  return {
+    width,
+    height,
+    getArea: function() {
+      return this.width * this.height;
+    },
+    getPerimeter: function() {
+      return 2 * (this.width + this.height);
+    }
+  };
+}
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
-  },
+function getProxy(object) {
+  const handler = {
+    get(target, prop) {
+      if (prop === 'value') {
+        return target;
+      }
+      if (typeof target[prop] === 'function') {
+        return target[prop].bind(target);
+      }
+      return target[prop];
+    },
+    set() {
+      throw new Error('Cannot add new property');
+    }
+  };
+  return new Proxy(object, handler);
+}
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
-  },
-};
-
-module.exports = {
-  Rectangle,
-  getJSON,
-  fromJSON,
-  cssSelectorBuilder,
-};
+function getRevProxy(object) {
+  const handler = {
+    get(target, prop) {
+      if (prop === 'value') {
+        return target;
+      }
+      return typeof target[prop] === 'function' ? target[prop].bind(target) : target[prop];
+    },
+    set() {
+      throw new Error('Cannot add new property');
+    }
+  };
+  return new Proxy(object, handler);
+}
